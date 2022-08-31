@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>54.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>AIM - Datatable</masterLabel>
+    <description>Displays a collection of records in a datatable for selection</description>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen" category="some random category">
+            <propertyType name="T" extends="SObject" label="01: Datatable Object API Name" description="Select the API Name of the SObject to use in the Datatable"/>
+            <property name="tableData" label="02: Datatable Record Collection" type="{T[]}" role="inputOnly" required="true" description="Record Collection variable containing the records to display in the datatable."/>
+            <property name="fieldList" label="03: Fields to Display" type="string" role="inputOnly" required="true" description="A comma seperated list of the field API names to display in the table" default="field1,field2,field3"/>
+            <property name="maxSelection" label="04: Max Selection" type="Integer" role="inputOnly" required="true" default="-1" description="The maximum number of rows the user can select from the table. For single selection, set to 1. For unlimited, set to -1."/>
+            <property name="selectedRows" label="05: Selected Rows" type="{T[]}" description="The selected records in the table. As input this functions as pre-selected rows, and as output serves as the user selected rows"/>
+            <property name="firstSelected" label="06: First Selected" type="{T}" role="outputOnly" description="The first selected record can be saved to an output record variable (Useful if only allowing a single selection)"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

@@ -1,0 +1,8 @@
+<design:component label="AIM - Email Composer">
+	<design:attribute name="whatId" label="01: WhatId" description="Pass the Id of the record used for merge fields (for preview)." />
+    <design:attribute name="orgWideEmailAddressId" label="02: Org Wide Email Address Id" description="The selected OrgWideEmailAddressID (for Output)" />
+   	<design:attribute name="subject" label="03: Subject" description="The email subject (for Output)" />
+    <design:attribute name="emailbody" label="04: Body" description="The email body (for Output)" />
+    <design:attribute name="templateIDs" label="05: Email Template Id" description="The selected email template (for Output)" />
+    <design:attribute name="saveactivity" label="06: Save Email as Activity" description="The selected Save as Activity Option (for Output)" />
+</design:component>

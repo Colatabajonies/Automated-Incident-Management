@@ -1,0 +1,113 @@
+<aura:component controller="AIM_EmailTemplateEditorController"
+                implements="lightning:availableForFlowScreens" access="global">
+    
+    <aura:attribute name="templateIDs" type="String" default="" />
+    <aura:attribute name="whatId" type="String" default="" />
+    <aura:attribute name="subject" type="string" />
+    <aura:attribute name="emailbody" type="String" default="" />
+    <aura:attribute name="saveactivity" type="Boolean" default="true" />
+    
+    <!--Part 1 [for attribute declare]-->
+    <aura:attribute name="loaded" type="Boolean" default="true" />
+    <aura:attribute name="email" type="string" />
+    
+    <aura:attribute name="mailStatus" type="boolean" default="false" />
+    <aura:attribute name="emailfolderVSTemplateList" type="object[]" default="[]" />
+    <aura:attribute name="emailFolderList" type="object[]" default="[]" />
+    <aura:attribute name="emailTemplateList" type="object[]" default="[]" />
+    <aura:attribute name="senderList" type="object[]" default="[]" />
+    <aura:attribute name="folderId1" type="String" default="" />
+    <aura:attribute name="orgWideEmailAddressId" type="String" default="" />
+    
+    
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    
+    <div class="exampleHolder">
+        <aura:if isTrue="{! v.loaded }">
+            <lightning:spinner alternativeText="Loading" />
+        </aura:if>
+    </div>
+    <div class="slds-m-around--medium">
+        
+        <div class="slds-form--stacked">
+            <!--Test for template -->
+            <label><b></b></label>
+            <div class="slds-form-element__control">
+                <div class="slds-form-element" aura:id="selectFolder">
+                    <label class="slds-form-element__label" for="select-Folder">Select Email Folder</label>
+                    <div class="slds-form-element__control">
+                        <div class="slds-select_container">
+                            <select class="slds-select" id="select-Folder"
+                                    onchange="{!c.onSelectEmailFolder}">
+                                <option value="">Please Select Folder</option>
+                                <aura:iteration items="{!v.emailfolderVSTemplateList}" var="folder">
+                                    <option value="{!folder.folderId}">{!folder.folderName}</option>
+                                </aura:iteration>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-form-element" aura:id="selectTemplate">
+                    <label class="slds-form-element__label" for="select-Template">Select Email Template</label>
+                    <div class="slds-form-element__control">
+                        <div class="slds-select_container">
+                            <select class="slds-select" id="select-Template"
+                                    onchange="{!c.onSelectEmailTemplate}">
+                                <option value="">Please Select Email Template</option>
+                                <aura:iteration items="{!v.emailTemplateList}" var="template">
+                                    <option value="{!template.emailTemplateId}">
+                                        {!template.emailTemplatename}</option>
+                                </aura:iteration>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-form-element" aura:id="selectSender">
+                    <label class="slds-form-element__label" for="select-Folder">Select Sender Address</label>
+                    <div class="slds-form-element__control">
+                        <div class="slds-select_container">
+                            <select class="slds-select" aura:id="select-Sender" onchange="{!c.onSelectSender}">
+                                <aura:iteration items="{!v.senderList}" var="sender">
+                                    <option value="{!sender.Id}">{!sender.DisplayName} ({!sender.Address})</option>
+                                </aura:iteration>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="CC">Subject</label>
+                    <div class="slds-form-element__control">
+                        <ui:inputText class="slds-input" aura:id="subject" value="{!v.subject}"
+                                      placeholder="Subject" />
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="textareaSample2">Mail Body</label>
+                    <div class="slds-form-element__control">
+                        <lightning:inputRichText aura:id="body" value="{!v.emailbody}" />
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                	<lightning:input type="checkbox" name="SaveAsActivity" label="Save Email as Activity" class="slds-p-vertical_small" checked="{!v.saveactivity}" />
+                </div>
+                <br />
+                
+                <table><tr><td><div class="slds-form-element">
+                    <label class="slds-form-element__label" for="CC">Test Email</label>
+                    <div class="slds-form-element__control">
+                        <ui:inputEmail class="slds-input" aura:id="email" value="{!v.email}"
+                                       required="true" placeholder="abc@email.com" />
+                    </div>
+                    </div></td><td style="vertical-align:bottom;padding-bottom:2px;padding-left:10px;">
+                    <button class="slds-button" onclick="{!c.sendMail}">Send Test Email</button>
+                    </td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</aura:component>

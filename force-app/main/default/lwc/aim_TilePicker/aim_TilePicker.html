@@ -1,0 +1,21 @@
+<template>
+    <fieldset class="slds-form-element">
+        <div class="slds-form-element__control" style="text-align:center;">
+            <template for:each={tileItems} for:item="curItem">
+                	<div key={curItem.Id} class={tileSizeClass} style="display:inline-block;vertical-align:top;margin-left:1rem;margin-bottom:1rem;">
+                    <input type={inputType} id={curItem.InputID} value={curItem.Id} name={curItem.RandomNumber} checked={curItem.Checked} onchange={handleCheckBoxChange} />
+                    <label for={curItem.InputID}>
+                        <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center" data-index={curItem.Id}>
+                            <span style="padding:15px">
+                                <lightning-formatted-rich-text value={curItem.TileHTML}></lightning-formatted-rich-text>
+                            </span>
+                        </span>
+                        <span class="slds-icon_container slds-visual-picker__text-check">
+                            <lightning-icon icon-name="utility:check" alternative-text="Approved" size="x-small" variant="inverse"></lightning-icon>
+                        </span>
+                    </label>
+                </div>
+            </template>
+        </div>
+    </fieldset>
+</template>
