@@ -2,9 +2,31 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>55.0</apiVersion>
     <decisions>
+        <name>In_Progress_Instance</name>
+        <label>In Progress Instance</label>
+        <locationX>182</locationX>
+        <locationY>935</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>In_Progress</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Orchestration_Instance</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Event</targetReference>
+            </connector>
+            <label>In Progress</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>Return_Rows</name>
         <label>Return Rows?</label>
-        <locationX>380</locationX>
+        <locationX>611</locationX>
         <locationY>455</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -26,7 +48,7 @@
     <decisions>
         <name>Return_Rows_0</name>
         <label>Return Rows?</label>
-        <locationX>182</locationX>
+        <locationX>380</locationX>
         <locationY>695</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -40,7 +62,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Create_Event</targetReference>
+                <targetReference>Get_Orchestration_Instance</targetReference>
             </connector>
             <label>Yes</label>
         </rules>
@@ -71,7 +93,7 @@
         <name>Create_Event</name>
         <label>Create Event</label>
         <locationX>50</locationX>
-        <locationY>815</locationY>
+        <locationY>1055</locationY>
         <inputAssignments>
             <field>OrchestrationInstanceId</field>
             <value>
@@ -84,7 +106,7 @@
     <recordLookups>
         <name>Get_In_Progress_Orchestrations</name>
         <label>Get In Progress Orchestrations</label>
-        <locationX>380</locationX>
+        <locationX>611</locationX>
         <locationY>335</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -98,6 +120,13 @@
                 <elementReference>$Record.Id</elementReference>
             </value>
         </filters>
+        <filters>
+            <field>Status</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Assigned</stringValue>
+            </value>
+        </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>FlowOrchestrationWorkItem</object>
         <sortField>CreatedDate</sortField>
@@ -107,7 +136,7 @@
     <recordLookups>
         <name>Get_InstanceId</name>
         <label>Get InstanceId</label>
-        <locationX>182</locationX>
+        <locationX>380</locationX>
         <locationY>575</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -123,10 +152,42 @@
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>FlowOrchestrationStepInstance</object>
+        <sortField>CreatedDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Orchestration_Instance</name>
+        <label>Get Orchestration Instance</label>
+        <locationX>182</locationX>
+        <locationY>815</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>In_Progress_Instance</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_InstanceId.OrchestrationInstanceId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Status</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>InProgress</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>FlowOrchestrationInstance</object>
+        <sortField>CreatedDate</sortField>
+        <sortOrder>Desc</sortOrder>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <start>
-        <locationX>254</locationX>
+        <locationX>485</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Get_In_Progress_Orchestrations</targetReference>

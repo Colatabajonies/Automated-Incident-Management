@@ -24,6 +24,36 @@
     </actionCalls>
     <apiVersion>55.0</apiVersion>
     <assignments>
+        <name>Assign_Case_Vars</name>
+        <label>Assign Case Vars</label>
+        <locationX>138</locationX>
+        <locationY>1790</locationY>
+        <assignmentItems>
+            <assignToReference>currentCase.Id</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Loop_Cases.CaseId</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>currentCase.Status</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Closed</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>casesToUpdate</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>currentCase</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Cases</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <name>Assign_Vars</name>
         <label>Assign Vars</label>
         <locationX>182</locationX>
@@ -75,16 +105,8 @@
         </value>
     </choices>
     <choices>
-        <name>chatbot</name>
-        <choiceText>Chatbot deflection</choiceText>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>chatbot</stringValue>
-        </value>
-    </choices>
-    <choices>
-        <name>community</name>
-        <choiceText>Place Incident Banner in Customer Community</choiceText>
+        <name>communitybanner</name>
+        <choiceText>Remove Community Banner(s)</choiceText>
         <dataType>String</dataType>
         <value>
             <stringValue>community</stringValue>
@@ -165,8 +187,15 @@
                     <elementReference>caseclose</elementReference>
                 </rightValue>
             </conditions>
+            <conditions>
+                <leftValueReference>AttachedCaseCount</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <numberValue>0.0</numberValue>
+                </rightValue>
+            </conditions>
             <connector>
-                <targetReference>Update_Incident</targetReference>
+                <targetReference>Loop_Cases</targetReference>
             </connector>
             <label>Yes</label>
         </rules>
@@ -225,6 +254,20 @@
     <interviewLabel>AIM - Completion Screen Flow {!$Flow.CurrentDateTime}</interviewLabel>
     <isTemplate>true</isTemplate>
     <label>AIM - Completion Screen Flow</label>
+    <loops>
+        <name>Loop_Cases</name>
+        <label>Loop Cases</label>
+        <locationX>50</locationX>
+        <locationY>1670</locationY>
+        <collectionReference>Get_Attached_Cases</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Assign_Case_Vars</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Update_Cases</targetReference>
+        </noMoreValuesConnector>
+    </loops>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -308,10 +351,20 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordUpdates>
+        <name>Update_Cases</name>
+        <label>Update Cases</label>
+        <locationX>50</locationX>
+        <locationY>2006</locationY>
+        <connector>
+            <targetReference>Update_Incident</targetReference>
+        </connector>
+        <inputReference>casesToUpdate</inputReference>
+    </recordUpdates>
+    <recordUpdates>
         <name>Update_Incident</name>
         <label>Update Incident</label>
         <locationX>182</locationX>
-        <locationY>1766</locationY>
+        <locationY>2222</locationY>
         <connector>
             <targetReference>Incident_Complete</targetReference>
         </connector>
@@ -344,13 +397,14 @@
         </connector>
         <fields>
             <name>SummaryText</name>
-            <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px; color: rgb(29, 49, 89);&quot;&gt;{!Get_Incident.Subject}&lt;/span&gt;&lt;span style=&quot;color: rgb(29, 49, 89);&quot;&gt; &lt;/span&gt;&lt;strong style=&quot;color: rgb(29, 49, 89); background-color: rgb(255, 255, 255);&quot;&gt;{!contactCount} &lt;/strong&gt;&lt;span style=&quot;color: rgb(29, 49, 89); background-color: rgb(255, 255, 255);&quot;&gt;impacted cases&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;background-color: rgb(255, 255, 255); color: rgb(29, 49, 89);&quot;&gt;{!contactCount} &lt;/strong&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(29, 49, 89);&quot;&gt;impacted assets&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(29, 49, 89);&quot;&gt;{!contactCount} &lt;/strong&gt;&lt;span style=&quot;color: rgb(29, 49, 89);&quot;&gt;impacted contacts&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 18px;&quot;&gt;Completion checklist&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;color: rgb(29, 49, 89); font-size: 16px;&quot;&gt;{!Get_Incident.Subject}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(29, 49, 89); background-color: rgb(255, 255, 255);&quot;&gt;{!contactCount} &lt;/strong&gt;&lt;span style=&quot;color: rgb(29, 49, 89); background-color: rgb(255, 255, 255);&quot;&gt;impacted cases&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(29, 49, 89); background-color: rgb(255, 255, 255);&quot;&gt;{!contactCount} &lt;/strong&gt;&lt;span style=&quot;color: rgb(29, 49, 89); background-color: rgb(255, 255, 255);&quot;&gt;impacted assets&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(29, 49, 89);&quot;&gt;{!contactCount} &lt;/strong&gt;&lt;span style=&quot;color: rgb(29, 49, 89);&quot;&gt;impacted contacts&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 18px;&quot;&gt;Completion checklist&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
             <name>Automation_Tasks</name>
             <choiceReferences>knowledge</choiceReferences>
             <choiceReferences>caseclose</choiceReferences>
+            <choiceReferences>communitybanner</choiceReferences>
             <dataType>String</dataType>
             <fieldText>Automation Tasks</fieldText>
             <fieldType>MultiSelectCheckboxes</fieldType>
@@ -373,7 +427,7 @@
         <name>Incident_Complete</name>
         <label>Incident Complete</label>
         <locationX>182</locationX>
-        <locationY>1886</locationY>
+        <locationY>2342</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -476,6 +530,14 @@
         </value>
     </variables>
     <variables>
+        <name>casesToUpdate</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Case</objectType>
+    </variables>
+    <variables>
         <name>contactCount</name>
         <dataType>Number</dataType>
         <isCollection>false</isCollection>
@@ -485,6 +547,14 @@
         <value>
             <numberValue>0.0</numberValue>
         </value>
+    </variables>
+    <variables>
+        <name>currentCase</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Case</objectType>
     </variables>
     <variables>
         <name>incidentId</name>

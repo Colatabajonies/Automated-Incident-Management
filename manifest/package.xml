@@ -21,6 +21,7 @@
         <members>AIM_NotificationScreenFlow</members>
         <members>AIM_WakeUpOrchestration</members>
         <members>AIM_StatusEvaluation</members>
+        <members>AIM_UpdateIncidentStatus</members>
         <name>Flow</name>
     </types>
     <types>
