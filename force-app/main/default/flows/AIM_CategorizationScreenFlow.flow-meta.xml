@@ -5,7 +5,7 @@
         <name>Add_Incident_Related_Item</name>
         <label>Add Incident Related Item</label>
         <locationX>523</locationX>
-        <locationY>3182</locationY>
+        <locationY>3662</locationY>
         <assignmentItems>
             <assignToReference>IncidentRelatedItem.AssetId</assignToReference>
             <operator>Assign</operator>
@@ -35,7 +35,7 @@
         <name>Add_Manual_Merge_to_Collection</name>
         <label>Add Manual Merge to Collection</label>
         <locationX>50</locationX>
-        <locationY>4526</locationY>
+        <locationY>5006</locationY>
         <assignmentItems>
             <assignToReference>MergeIncidents</assignToReference>
             <operator>Add</operator>
@@ -52,7 +52,7 @@
         <name>Add_New_Case_Related_Item</name>
         <label>Add New Case Related Item</label>
         <locationX>457</locationX>
-        <locationY>1718</locationY>
+        <locationY>1958</locationY>
         <assignmentItems>
             <assignToReference>caseRelatedItem.CaseId</assignToReference>
             <operator>Assign</operator>
@@ -89,7 +89,7 @@
         <name>Assign_Count</name>
         <label>Assign Count</label>
         <locationX>798</locationX>
-        <locationY>4286</locationY>
+        <locationY>4766</locationY>
         <assignmentItems>
             <assignToReference>mergeCount</assignToReference>
             <operator>AssignCount</operator>
@@ -105,14 +105,7 @@
         <name>Assign_Count_from_I_W_Logic</name>
         <label>Assign Count from I&amp;W Logic</label>
         <locationX>501</locationX>
-        <locationY>1238</locationY>
-        <assignmentItems>
-            <assignToReference>CasesToAddIDs</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>5004x00000KvTmkAAF</stringValue>
-            </value>
-        </assignmentItems>
+        <locationY>1478</locationY>
         <assignmentItems>
             <assignToReference>caseCount</assignToReference>
             <operator>AssignCount</operator>
@@ -128,14 +121,7 @@
         <name>Assign_Count_from_I_W_Logic_0</name>
         <label>Assign Count from I&amp;W Logic</label>
         <locationX>567</locationX>
-        <locationY>2702</locationY>
-        <assignmentItems>
-            <assignToReference>AssetstoAddIds</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>02i4x000000jAiMAAU</stringValue>
-            </value>
-        </assignmentItems>
+        <locationY>3182</locationY>
         <assignmentItems>
             <assignToReference>AssetCount</assignToReference>
             <operator>AssignCount</operator>
@@ -151,7 +137,7 @@
         <name>Assign_Parent</name>
         <label>Assign Parent</label>
         <locationX>754</locationX>
-        <locationY>4766</locationY>
+        <locationY>5246</locationY>
         <assignmentItems>
             <assignToReference>LoopMergeIncidents.ParentIncidentId</assignToReference>
             <operator>Assign</operator>
@@ -190,7 +176,7 @@
         <name>Default_Target</name>
         <label>Default Target</label>
         <locationX>490</locationX>
-        <locationY>3926</locationY>
+        <locationY>4406</locationY>
         <assignmentItems>
             <assignToReference>targetMergeIncident</assignToReference>
             <operator>Assign</operator>
@@ -202,9 +188,41 @@
             <targetReference>Merge_Incidents</targetReference>
         </connector>
     </assignments>
+    <assignments>
+        <name>REPLACE_WITH_ASSETREPORT_LOOKUP</name>
+        <label>REPLACE WITH REPORT LOOKUP</label>
+        <locationX>567</locationX>
+        <locationY>2942</locationY>
+        <assignmentItems>
+            <assignToReference>AssetstoAddIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>02i4x000000jAiMAAU</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Filter_Existing_Assets</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>REPLACE_WITH_REPORTCASE_LOOKUP</name>
+        <label>[REPLACE WITH REPORT LOOKUP]</label>
+        <locationX>501</locationX>
+        <locationY>1238</locationY>
+        <assignmentItems>
+            <assignToReference>CasesToAddIDs</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>5004x00000KvTmkAAF</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Filter_Existing_Attached_Cases</targetReference>
+        </connector>
+    </assignments>
     <choices>
         <name>AddMerge</name>
-        <choiceText>Bulk search incidents to merge</choiceText>
+        <choiceText>Add incidents - bulk search</choiceText>
         <dataType>String</dataType>
         <value>
             <stringValue>bulkmergesearch</stringValue>
@@ -244,7 +262,7 @@
     </choices>
     <choices>
         <name>manualmergeadd</name>
-        <choiceText>Manual search incident to merge</choiceText>
+        <choiceText>Add incidents - manual search</choiceText>
         <dataType>String</dataType>
         <value>
             <stringValue>manualmergeadd</stringValue>
@@ -284,7 +302,7 @@
     </choices>
     <choices>
         <name>performmerge</name>
-        <choiceText>Finish and perform merge action</choiceText>
+        <choiceText>Finish - merge incidents above</choiceText>
         <dataType>String</dataType>
         <value>
             <stringValue>performmerge</stringValue>
@@ -292,17 +310,25 @@
     </choices>
     <choices>
         <name>removemerge</name>
-        <choiceText>Remove Incident from merge</choiceText>
+        <choiceText>Remove incidents from merge</choiceText>
         <dataType>String</dataType>
         <value>
             <stringValue>removemerge</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>skipmerge</name>
+        <choiceText>Skip merge step</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>skipmerge</stringValue>
         </value>
     </choices>
     <decisions>
         <name>Are_we_performing_a_merge</name>
         <label>Are we performing a merge?</label>
         <locationX>798</locationX>
-        <locationY>4406</locationY>
+        <locationY>4886</locationY>
         <defaultConnector>
             <targetReference>Confirm_Complete</targetReference>
         </defaultConnector>
@@ -324,6 +350,13 @@
                     <numberValue>0.0</numberValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <leftValueReference>MergeIncidents</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
                 <targetReference>Confirm_Merge</targetReference>
             </connector>
@@ -334,7 +367,7 @@
         <name>Asset_Selection_Type</name>
         <label>Asset Report Selected?</label>
         <locationX>721</locationX>
-        <locationY>2582</locationY>
+        <locationY>2822</locationY>
         <defaultConnector>
             <targetReference>Merge_Similar_Incidents_Selected</targetReference>
         </defaultConnector>
@@ -350,7 +383,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Assign_Count_from_I_W_Logic_0</targetReference>
+                <targetReference>REPLACE_WITH_ASSETREPORT_LOOKUP</targetReference>
             </connector>
             <label>Report Selected</label>
         </rules>
@@ -359,7 +392,7 @@
         <name>Assets_Found_0</name>
         <label>Assets Found?</label>
         <locationX>567</locationX>
-        <locationY>2822</locationY>
+        <locationY>3302</locationY>
         <defaultConnector>
             <targetReference>Merge_Similar_Incidents_Selected</targetReference>
         </defaultConnector>
@@ -384,7 +417,7 @@
         <name>Cases_Found</name>
         <label>Cases Found?</label>
         <locationX>501</locationX>
-        <locationY>1358</locationY>
+        <locationY>1598</locationY>
         <defaultConnector>
             <targetReference>No_Records_Found</targetReference>
         </defaultConnector>
@@ -409,7 +442,7 @@
         <name>Find_Similar_Assets_Selected</name>
         <label>Find Similar Assets Selected?</label>
         <locationX>886</locationX>
-        <locationY>2342</locationY>
+        <locationY>2582</locationY>
         <defaultConnector>
             <targetReference>Merge_Similar_Incidents_Selected</targetReference>
         </defaultConnector>
@@ -459,7 +492,7 @@
         <name>is_Categorization_Complete</name>
         <label>is Categorization Complete?</label>
         <locationX>886</locationX>
-        <locationY>5510</locationY>
+        <locationY>5990</locationY>
         <defaultConnector>
             <isGoTo>true</isGoTo>
             <targetReference>Get_RelatedCases</targetReference>
@@ -501,7 +534,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Assign_Count_from_I_W_Logic</targetReference>
+                <targetReference>REPLACE_WITH_REPORTCASE_LOOKUP</targetReference>
             </connector>
             <label>Yes</label>
         </rules>
@@ -510,7 +543,7 @@
         <name>Merge_Similar_Incidents_Selected</name>
         <label>Merge Similar Incidents Selected?</label>
         <locationX>886</locationX>
-        <locationY>3806</locationY>
+        <locationY>4286</locationY>
         <defaultConnector>
             <targetReference>Confirm_Complete</targetReference>
         </defaultConnector>
@@ -535,7 +568,7 @@
         <name>whatis_Merge_Action</name>
         <label>Merge Action</label>
         <locationX>490</locationX>
-        <locationY>4166</locationY>
+        <locationY>4646</locationY>
         <defaultConnector>
             <targetReference>Confirm_Complete</targetReference>
         </defaultConnector>
@@ -609,7 +642,7 @@
         <name>Loop_Through_Assets</name>
         <label>Loop Through Assets</label>
         <locationX>435</locationX>
-        <locationY>3062</locationY>
+        <locationY>3542</locationY>
         <collectionReference>AssetstoAddIds</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -623,7 +656,7 @@
         <name>Loop_Through_Case_IDs</name>
         <label>Loop Through Case IDs</label>
         <locationX>369</locationX>
-        <locationY>1598</locationY>
+        <locationY>1838</locationY>
         <collectionReference>CasesToAddIDs</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -637,7 +670,7 @@
         <name>LoopMergeIncidents</name>
         <label>LoopMergeIncidents</label>
         <locationX>666</locationX>
-        <locationY>4646</locationY>
+        <locationY>5126</locationY>
         <collectionReference>MergeIncidents</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -670,7 +703,7 @@
         <name>Create_Case_Related_Issue_Records</name>
         <label>Create Case Related Issue Records</label>
         <locationX>369</locationX>
-        <locationY>1934</locationY>
+        <locationY>2174</locationY>
         <connector>
             <targetReference>Find_Similar_Assets_Selected</targetReference>
         </connector>
@@ -680,7 +713,7 @@
         <name>Create_Incident_Related_Items_0_0</name>
         <label>Create Incident Related Items</label>
         <locationX>435</locationX>
-        <locationY>3398</locationY>
+        <locationY>3878</locationY>
         <connector>
             <targetReference>Merge_Similar_Incidents_Selected</targetReference>
         </connector>
@@ -711,7 +744,7 @@
         <name>Get_Manual_Incident_to_Add_Merge</name>
         <label>Get Manual Incident to Add Merge</label>
         <locationX>50</locationX>
-        <locationY>4406</locationY>
+        <locationY>4886</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Add_Manual_Merge_to_Collection</targetReference>
@@ -814,7 +847,7 @@
         <name>Update_Incidents</name>
         <label>Update Incidents</label>
         <locationX>666</locationX>
-        <locationY>4982</locationY>
+        <locationY>5462</locationY>
         <connector>
             <targetReference>Confirm_Complete</targetReference>
         </connector>
@@ -824,7 +857,7 @@
         <name>Addmergeincident</name>
         <label>Add Merge Incident</label>
         <locationX>50</locationX>
-        <locationY>4286</locationY>
+        <locationY>4766</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -873,7 +906,7 @@
         <name>CompleteScreen</name>
         <label>Complete</label>
         <locationX>754</locationX>
-        <locationY>5630</locationY>
+        <locationY>6110</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -915,7 +948,7 @@
         <name>Confirm_assets_to_add_0</name>
         <label>Confirm assets to add</label>
         <locationX>435</locationX>
-        <locationY>2942</locationY>
+        <locationY>3422</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -934,7 +967,7 @@
         <name>Confirm_cases_to_add</name>
         <label>Confirm cases to add</label>
         <locationX>369</locationX>
-        <locationY>1478</locationY>
+        <locationY>1718</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -953,7 +986,7 @@
         <name>Confirm_Complete</name>
         <label>Confirm Complete</label>
         <locationX>886</locationX>
-        <locationY>5390</locationY>
+        <locationY>5870</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -981,7 +1014,7 @@
         <name>Confirm_Merge</name>
         <label>Confirm Merge</label>
         <locationX>666</locationX>
-        <locationY>4526</locationY>
+        <locationY>5006</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -1029,7 +1062,7 @@
         <name>Merge_Incidents</name>
         <label>Merge Incidents</label>
         <locationX>490</locationX>
-        <locationY>4046</locationY>
+        <locationY>4526</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -1118,6 +1151,7 @@
             <choiceReferences>manualmergeadd</choiceReferences>
             <choiceReferences>removemerge</choiceReferences>
             <choiceReferences>performmerge</choiceReferences>
+            <choiceReferences>skipmerge</choiceReferences>
             <dataType>String</dataType>
             <fieldText>What would you like to do?</fieldText>
             <fieldType>RadioButtons</fieldType>
@@ -1130,7 +1164,7 @@
         <name>No_Records_Found</name>
         <label>No Records Found</label>
         <locationX>633</locationX>
-        <locationY>1478</locationY>
+        <locationY>1718</locationY>
         <allowBack>true</allowBack>
         <allowFinish>false</allowFinish>
         <allowPause>false</allowPause>
@@ -1146,7 +1180,7 @@
         <name>Remove_Incidents_to_Merge</name>
         <label>Remove Incidents to Merge</label>
         <locationX>314</locationX>
-        <locationY>4286</locationY>
+        <locationY>4766</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -1251,7 +1285,7 @@
         <name>Select_report_to_add_cases_from_0</name>
         <label>Select report to add cases from</label>
         <locationX>721</locationX>
-        <locationY>2462</locationY>
+        <locationY>2702</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -1328,6 +1362,58 @@
         </connector>
     </start>
     <status>Active</status>
+    <subflows>
+        <name>Filter_Existing_Assets</name>
+        <label>Filter Existing Assets</label>
+        <locationX>567</locationX>
+        <locationY>3062</locationY>
+        <connector>
+            <targetReference>Assign_Count_from_I_W_Logic_0</targetReference>
+        </connector>
+        <flowName>AIM_FilterExistingIncidentRelatedItems</flowName>
+        <inputAssignments>
+            <name>AssetIds</name>
+            <value>
+                <elementReference>AssetstoAddIds</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>IncidentId</name>
+            <value>
+                <elementReference>incidentId</elementReference>
+            </value>
+        </inputAssignments>
+        <outputAssignments>
+            <assignToReference>AssetstoAddIds</assignToReference>
+            <name>AssetIds</name>
+        </outputAssignments>
+    </subflows>
+    <subflows>
+        <name>Filter_Existing_Attached_Cases</name>
+        <label>Filter Existing Attached Cases</label>
+        <locationX>501</locationX>
+        <locationY>1358</locationY>
+        <connector>
+            <targetReference>Assign_Count_from_I_W_Logic</targetReference>
+        </connector>
+        <flowName>AIM_FilterExistingIncidentRelatedItems</flowName>
+        <inputAssignments>
+            <name>CaseIds</name>
+            <value>
+                <elementReference>CasesToAddIDs</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>IncidentId</name>
+            <value>
+                <elementReference>incidentId</elementReference>
+            </value>
+        </inputAssignments>
+        <outputAssignments>
+            <assignToReference>CasesToAddIDs</assignToReference>
+            <name>CaseIds</name>
+        </outputAssignments>
+    </subflows>
     <variables>
         <name>AssetCount</name>
         <dataType>Number</dataType>

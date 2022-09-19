@@ -50,7 +50,7 @@ export default class aim_Datatable extends LightningElement
             else
             {
                 this.isError = true;
-                this.selectedRows = null;
+                this.selectedRows = [];
                 this.firstSelected = null;
             }
         } 
@@ -67,7 +67,7 @@ export default class aim_Datatable extends LightningElement
     getSelectedName(event) {
         
         const theSelectedRows = event.detail.selectedRows;
-        this.selectedRows = null;
+        this.selectedRows = [];
         this.firstSelected = null;
         // Display that fieldName of the selected rows
         for (let i = 0; i < theSelectedRows.length; i++)

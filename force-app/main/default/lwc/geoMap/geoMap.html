@@ -1,0 +1,68 @@
+<template>
+  <lightning-card  >
+    <p slot="title">
+      <lightning-icon slot="media" icon-name="standard:location" size="small">
+      </lightning-icon>
+      <lightning-formatted-text value="Asset Map" class="slds-p-horizontal_small"></lightning-formatted-text>
+      
+
+    </p>
+        <lightning-layout multiple-rows >
+        <lightning-layout-item padding="horizontal-small"  flexibility="auto">
+      <lightning-combobox
+        data-name="product"
+        name="product"
+        label="Product"
+        placeholder="Choose Product"
+        value={productValue}
+        onchange={handleChange}
+        options={productOptions}
+    >
+    </lightning-combobox>
+  </lightning-layout-item>
+    <lightning-layout-item padding="horizontal-small"  flexibility="auto">
+    <lightning-combobox
+    data-name="productFamily"
+        name="productFamily"
+        label="Product Family"
+        placeholder="Choose Product Family"
+        value={productFamilyValue}
+        onchange={handleChange}
+        options={productFamilyOptions}
+    >
+    </lightning-combobox>
+  </lightning-layout-item>
+    <lightning-layout-item padding="horizontal-small"  flexibility="auto">
+    <lightning-combobox
+    data-name="status"
+        name="status"
+        label="Asset Status"
+        placeholder="Choose Status"
+        value={statusValue}
+        onchange={handleChange}
+        options={statusOptions}
+    >
+    </lightning-combobox>
+  </lightning-layout-item>
+  <lightning-layout-item padding="horizontal-small"  flexibility="auto" class="slds-align-bottom">
+  <!-- <lightning-input type="toggle" label="Display Asset List" checked={showList} onchange={handleListToggle} message-toggle-active="Enabled" message-toggle-inactive="Disabled"></lightning-input> -->
+</lightning-layout-item>
+</lightning-layout>
+<lightning-layout multiple-rows >
+  <lightning-layout-item padding="around-small" size="12" small-device-size="12" medium-device-size="12" large-device-size="12" class="slds-border_bottom">
+  <lightning-map
+    map-markers={mapMarkers}
+    markers-title="Asset List"
+    onmarkerselect={handleMarkerSelect}
+    list-view={listView}
+    selected-marker-value={selectedMarkerValue}
+  >
+  </lightning-map>
+</lightning-layout-item>
+<lightning-layout-item padding="around-small" size="12" small-device-size="12" medium-device-size="12" large-device-size="12" class="slds-border_bottom">
+  <c-selected-map-picker></c-selected-map-picker>
+  </lightning-layout-item>
+  </lightning-layout>
+</lightning-card>
+
+</template>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntitlementProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <SObjectType>Incident</SObjectType>
+    <active>true</active>
+    <entryStartDateField>Incident.CreatedDate</entryStartDateField>
+    <exitCriteriaFilterItems>
+        <field>Incident.IsClosed</field>
+        <operation>equals</operation>
+        <value>true</value>
+    </exitCriteriaFilterItems>
+    <milestones>
+        <milestoneCriteriaFilterItems>
+            <field>Incident.Status</field>
+            <operation>notEqual</operation>
+            <value>Completed, Closed</value>
+        </milestoneCriteriaFilterItems>
+        <milestoneName>Incident first response</milestoneName>
+        <minutesToComplete>30</minutesToComplete>
+        <useCriteriaStartTime>false</useCriteriaStartTime>
+    </milestones>
+    <milestones>
+        <milestoneCriteriaFilterItems>
+            <field>Incident.Status</field>
+            <operation>notEqual</operation>
+            <value>Completed, Closed</value>
+        </milestoneCriteriaFilterItems>
+        <milestoneName>Incident qualification</milestoneName>
+        <minutesToComplete>60</minutesToComplete>
+        <useCriteriaStartTime>false</useCriteriaStartTime>
+    </milestones>
+    <milestones>
+        <milestoneCriteriaFilterItems>
+            <field>Incident.Status</field>
+            <operation>notEqual</operation>
+            <value>Closed</value>
+        </milestoneCriteriaFilterItems>
+        <milestoneName>Incident notification and deflection</milestoneName>
+        <minutesToComplete>120</minutesToComplete>
+        <useCriteriaStartTime>false</useCriteriaStartTime>
+    </milestones>
+    <milestones>
+        <milestoneCriteriaFilterItems>
+            <field>Incident.Status</field>
+            <operation>notEqual</operation>
+            <value>Completed, Closed</value>
+        </milestoneCriteriaFilterItems>
+        <milestoneName>Incident investigation started</milestoneName>
+        <minutesToComplete>240</minutesToComplete>
+        <useCriteriaStartTime>false</useCriteriaStartTime>
+    </milestones>
+    <milestones>
+        <milestoneName>Incident closed</milestoneName>
+        <minutesToComplete>480</minutesToComplete>
+        <useCriteriaStartTime>false</useCriteriaStartTime>
+    </milestones>
+</EntitlementProcess>

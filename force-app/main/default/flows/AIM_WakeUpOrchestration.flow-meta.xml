@@ -120,13 +120,6 @@
                 <elementReference>$Record.Id</elementReference>
             </value>
         </filters>
-        <filters>
-            <field>Status</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Assigned</stringValue>
-            </value>
-        </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>FlowOrchestrationWorkItem</object>
         <sortField>CreatedDate</sortField>
@@ -178,6 +171,13 @@
             <operator>EqualTo</operator>
             <value>
                 <stringValue>InProgress</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>InterviewId</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
             </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>

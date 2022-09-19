@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>55.0</apiVersion>
+    <apiVersion>56.0</apiVersion>
     <decisions>
-        <name>What_Status</name>
-        <label>Incident Status?</label>
+        <name>Check_Incident_Status</name>
+        <label>Check Incident Status</label>
         <locationX>754</locationX>
         <locationY>431</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
-            <name>New_First_Response</name>
+            <name>isNew</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>Get_IncidentStatus.Outputs.incidentStatus</leftValueReference>
+                <leftValueReference>Get_Incident_Status.Outputs.incidentStatus</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>New</stringValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>First_Response</targetReference>
+                <targetReference>FirstResponseStage</targetReference>
             </connector>
             <label>New (First Response)</label>
         </rules>
@@ -26,44 +26,44 @@
             <name>isOpen</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>Get_IncidentStatus.Outputs.incidentStatus</leftValueReference>
+                <leftValueReference>Get_Incident_Status.Outputs.incidentStatus</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>Open</stringValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Categorization_Stage</targetReference>
+                <targetReference>QualificationStage</targetReference>
             </connector>
             <label>Open</label>
         </rules>
         <rules>
-            <name>isIn_Progress</name>
+            <name>isInProgress</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>Get_IncidentStatus.Outputs.incidentStatus</leftValueReference>
+                <leftValueReference>Get_Incident_Status.Outputs.incidentStatus</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>In Progress</stringValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Notification_Stage</targetReference>
+                <targetReference>NotificationInProgressStage</targetReference>
             </connector>
-            <label>In Progress</label>
+            <label>InProgress</label>
         </rules>
         <rules>
             <name>isResolved</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>Get_IncidentStatus.Outputs.incidentStatus</leftValueReference>
+                <leftValueReference>Get_Incident_Status.Outputs.incidentStatus</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>Resolved</stringValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Resolution_Stage</targetReference>
+                <targetReference>ResolutionStage</targetReference>
             </connector>
             <label>Resolved</label>
         </rules>
@@ -71,14 +71,14 @@
             <name>isCompleted</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>Get_IncidentStatus.Outputs.incidentStatus</leftValueReference>
+                <leftValueReference>Get_Incident_Status.Outputs.incidentStatus</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>Completed</stringValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Closure_Stage</targetReference>
+                <targetReference>ClosureStage</targetReference>
             </connector>
             <label>Completed</label>
         </rules>
@@ -86,147 +86,23 @@
             <name>isClosed</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>Get_IncidentStatus.Outputs.incidentStatus</leftValueReference>
+                <leftValueReference>Get_Incident_Status.Outputs.incidentStatus</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>Closed</stringValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Closure_Stage</targetReference>
+                <targetReference>ClosureStage</targetReference>
             </connector>
             <label>Closed</label>
         </rules>
     </decisions>
     <environments>Default</environments>
     <interviewLabel>AIM - Incident Orchestration {!$Flow.CurrentDateTime}</interviewLabel>
-    <isTemplate>true</isTemplate>
     <label>AIM - Incident Orchestration</label>
     <orchestratedStages>
-        <name>Categorization_Stage</name>
-        <label>Categorization Stage</label>
-        <locationX>314</locationX>
-        <locationY>551</locationY>
-        <connector>
-            <isGoTo>true</isGoTo>
-            <targetReference>Refresh_Incident_Status</targetReference>
-        </connector>
-        <exitActionInputParameters>
-            <name>Equals</name>
-            <value>
-                <booleanValue>false</booleanValue>
-            </value>
-        </exitActionInputParameters>
-        <exitActionInputParameters>
-            <name>IncidentID</name>
-            <value>
-                <elementReference>$Record.Id</elementReference>
-            </value>
-        </exitActionInputParameters>
-        <exitActionInputParameters>
-            <name>statusValue</name>
-            <value>
-                <stringValue>Open</stringValue>
-            </value>
-        </exitActionInputParameters>
-        <exitActionName>AIM_StatusEvaluation</exitActionName>
-        <exitActionType>evaluationFlow</exitActionType>
-        <exitConditionLogic>and</exitConditionLogic>
-        <stageSteps>
-            <name>Complete_Categorization_Flow</name>
-            <actionName>AIM_CategorizationScreenFlow</actionName>
-            <actionType>stepInteractive</actionType>
-            <assignees>
-                <assignee>
-                    <stringValue>AIM_Categorization</stringValue>
-                </assignee>
-                <assigneeType>Queue</assigneeType>
-            </assignees>
-            <entryConditionLogic>and</entryConditionLogic>
-            <inputParameters>
-                <name>ActionInput__RecordId</name>
-                <value>
-                    <elementReference>$Record.Id</elementReference>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>incidentId</name>
-                <value>
-                    <elementReference>$Record.Id</elementReference>
-                </value>
-            </inputParameters>
-            <label>Complete Categorization Flow</label>
-            <requiresAsyncProcessing>false</requiresAsyncProcessing>
-        </stageSteps>
-        <stageSteps>
-            <name>Update_Categorization_Milestone</name>
-            <actionName>AIM_UpdateMilestone</actionName>
-            <actionType>stepBackground</actionType>
-            <entryConditionLogic>and</entryConditionLogic>
-            <entryConditions>
-                <leftValueReference>Complete_Categorization_Flow.Status</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Completed</stringValue>
-                </rightValue>
-            </entryConditions>
-            <inputParameters>
-                <name>complete</name>
-                <value>
-                    <booleanValue>true</booleanValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>IncidentId</name>
-                <value>
-                    <elementReference>$Record.Id</elementReference>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>milestoneName</name>
-                <value>
-                    <stringValue>Incident categorization</stringValue>
-                </value>
-            </inputParameters>
-            <label>Update Categorization Milestone</label>
-            <requiresAsyncProcessing>false</requiresAsyncProcessing>
-        </stageSteps>
-        <stageSteps>
-            <name>Update_Status_to_In_Progress</name>
-            <actionName>AIM_UpdateIncidentStatus</actionName>
-            <actionType>stepBackground</actionType>
-            <entryConditionLogic>and</entryConditionLogic>
-            <entryConditions>
-                <leftValueReference>Update_Categorization_Milestone.Status</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Completed</stringValue>
-                </rightValue>
-            </entryConditions>
-            <inputParameters>
-                <name>incidentId</name>
-                <value>
-                    <elementReference>$Record.Id</elementReference>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>statusFrom</name>
-                <value>
-                    <stringValue>Open</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>statusTo</name>
-                <value>
-                    <stringValue>In Progress</stringValue>
-                </value>
-            </inputParameters>
-            <label>Update Status to In Progress</label>
-            <requiresAsyncProcessing>false</requiresAsyncProcessing>
-        </stageSteps>
-    </orchestratedStages>
-    <orchestratedStages>
-        <name>Closure_Stage</name>
+        <name>ClosureStage</name>
         <label>Closure Stage</label>
         <locationX>754</locationX>
         <locationY>827</locationY>
@@ -259,7 +135,7 @@
         </stageSteps>
     </orchestratedStages>
     <orchestratedStages>
-        <name>First_Response</name>
+        <name>FirstResponseStage</name>
         <label>First Response</label>
         <locationX>50</locationX>
         <locationY>551</locationY>
@@ -289,7 +165,7 @@
         <exitActionType>evaluationFlow</exitActionType>
         <exitConditionLogic>and</exitConditionLogic>
         <stageSteps>
-            <name>Complete_FirstResponseFlow</name>
+            <name>Flow_First_Response</name>
             <actionName>AIM_FirstResponseScreenFlow</actionName>
             <actionType>stepInteractive</actionType>
             <assignees>
@@ -311,16 +187,16 @@
                     <elementReference>$Record.Id</elementReference>
                 </value>
             </inputParameters>
-            <label>Complete First Response Flow</label>
+            <label>Flow - First Response</label>
             <requiresAsyncProcessing>false</requiresAsyncProcessing>
         </stageSteps>
         <stageSteps>
-            <name>Update_FirstResponseMilestone</name>
+            <name>Update_First_Response_Milestone</name>
             <actionName>AIM_UpdateMilestone</actionName>
             <actionType>stepBackground</actionType>
             <entryConditionLogic>and</entryConditionLogic>
             <entryConditions>
-                <leftValueReference>Complete_FirstResponseFlow.Status</leftValueReference>
+                <leftValueReference>Flow_First_Response.Status</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>Completed</stringValue>
@@ -353,7 +229,7 @@
             <actionType>stepBackground</actionType>
             <entryConditionLogic>and</entryConditionLogic>
             <entryConditions>
-                <leftValueReference>Update_FirstResponseMilestone.Status</leftValueReference>
+                <leftValueReference>Update_First_Response_Milestone.Status</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>Completed</stringValue>
@@ -382,7 +258,7 @@
         </stageSteps>
     </orchestratedStages>
     <orchestratedStages>
-        <name>Notification_Stage</name>
+        <name>NotificationInProgressStage</name>
         <label>Notification / In Progress Stage</label>
         <locationX>578</locationX>
         <locationY>551</locationY>
@@ -412,7 +288,7 @@
         <exitActionType>evaluationFlow</exitActionType>
         <exitConditionLogic>and</exitConditionLogic>
         <stageSteps>
-            <name>Complete_Notification_Flow</name>
+            <name>Flow_Notification</name>
             <actionName>AIM_NotificationScreenFlow</actionName>
             <actionType>stepInteractive</actionType>
             <assignees>
@@ -434,7 +310,7 @@
                     <elementReference>$Record.Id</elementReference>
                 </value>
             </inputParameters>
-            <label>Complete Notification Flow</label>
+            <label>Flow - Notification</label>
             <requiresAsyncProcessing>false</requiresAsyncProcessing>
         </stageSteps>
         <stageSteps>
@@ -443,7 +319,7 @@
             <actionType>stepBackground</actionType>
             <entryConditionLogic>and</entryConditionLogic>
             <entryConditions>
-                <leftValueReference>Complete_Notification_Flow.Status</leftValueReference>
+                <leftValueReference>Flow_Notification.Status</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>Completed</stringValue>
@@ -498,16 +374,139 @@
         </stageSteps>
     </orchestratedStages>
     <orchestratedStages>
+        <name>QualificationStage</name>
+        <label>Qualification Stage</label>
+        <locationX>314</locationX>
+        <locationY>551</locationY>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Refresh_Incident_Status</targetReference>
+        </connector>
+        <exitActionInputParameters>
+            <name>Equals</name>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </exitActionInputParameters>
+        <exitActionInputParameters>
+            <name>IncidentID</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </exitActionInputParameters>
+        <exitActionInputParameters>
+            <name>statusValue</name>
+            <value>
+                <stringValue>Open</stringValue>
+            </value>
+        </exitActionInputParameters>
+        <exitActionName>AIM_StatusEvaluation</exitActionName>
+        <exitActionType>evaluationFlow</exitActionType>
+        <exitConditionLogic>and</exitConditionLogic>
+        <stageSteps>
+            <name>Flow_Qualification</name>
+            <actionName>AIM_QualificationScreenFlow</actionName>
+            <actionType>stepInteractive</actionType>
+            <assignees>
+                <assignee>
+                    <stringValue>AIM_Qualification</stringValue>
+                </assignee>
+                <assigneeType>Queue</assigneeType>
+            </assignees>
+            <entryConditionLogic>and</entryConditionLogic>
+            <inputParameters>
+                <name>ActionInput__RecordId</name>
+                <value>
+                    <elementReference>$Record.Id</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>incidentId</name>
+                <value>
+                    <elementReference>$Record.Id</elementReference>
+                </value>
+            </inputParameters>
+            <label>Flow - Qualification</label>
+            <requiresAsyncProcessing>false</requiresAsyncProcessing>
+        </stageSteps>
+        <stageSteps>
+            <name>Update_Qualification_Milestone</name>
+            <actionName>AIM_UpdateMilestone</actionName>
+            <actionType>stepBackground</actionType>
+            <entryConditionLogic>and</entryConditionLogic>
+            <entryConditions>
+                <leftValueReference>Flow_Qualification.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Completed</stringValue>
+                </rightValue>
+            </entryConditions>
+            <inputParameters>
+                <name>complete</name>
+                <value>
+                    <booleanValue>true</booleanValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>IncidentId</name>
+                <value>
+                    <elementReference>$Record.Id</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>milestoneName</name>
+                <value>
+                    <stringValue>Incident qualification</stringValue>
+                </value>
+            </inputParameters>
+            <label>Update Qualification Milestone</label>
+            <requiresAsyncProcessing>false</requiresAsyncProcessing>
+        </stageSteps>
+        <stageSteps>
+            <name>Update_Status_to_In_Progress</name>
+            <actionName>AIM_UpdateIncidentStatus</actionName>
+            <actionType>stepBackground</actionType>
+            <entryConditionLogic>and</entryConditionLogic>
+            <entryConditions>
+                <leftValueReference>Update_Qualification_Milestone.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Completed</stringValue>
+                </rightValue>
+            </entryConditions>
+            <inputParameters>
+                <name>incidentId</name>
+                <value>
+                    <elementReference>$Record.Id</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>statusFrom</name>
+                <value>
+                    <stringValue>Open</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>statusTo</name>
+                <value>
+                    <stringValue>In Progress</stringValue>
+                </value>
+            </inputParameters>
+            <label>Update Status to In Progress</label>
+            <requiresAsyncProcessing>false</requiresAsyncProcessing>
+        </stageSteps>
+    </orchestratedStages>
+    <orchestratedStages>
         <name>Refresh_Incident_Status</name>
         <label>Refresh Incident Status</label>
         <locationX>754</locationX>
         <locationY>311</locationY>
         <connector>
-            <targetReference>What_Status</targetReference>
+            <targetReference>Check_Incident_Status</targetReference>
         </connector>
         <exitConditionLogic>and</exitConditionLogic>
         <stageSteps>
-            <name>Get_IncidentStatus</name>
+            <name>Get_Incident_Status</name>
             <actionName>AIM_GetIncidentStatus</actionName>
             <actionType>stepBackground</actionType>
             <entryConditionLogic>and</entryConditionLogic>
@@ -522,7 +521,7 @@
         </stageSteps>
     </orchestratedStages>
     <orchestratedStages>
-        <name>Resolution_Stage</name>
+        <name>ResolutionStage</name>
         <label>Resolution Stage</label>
         <locationX>842</locationX>
         <locationY>551</locationY>
@@ -552,7 +551,7 @@
         <exitActionType>evaluationFlow</exitActionType>
         <exitConditionLogic>and</exitConditionLogic>
         <stageSteps>
-            <name>Complete_Completion_Flow</name>
+            <name>Flow_Completion</name>
             <actionName>AIM_CompletionScreenFlow</actionName>
             <actionType>stepInteractive</actionType>
             <assignees>
@@ -574,7 +573,7 @@
                     <elementReference>$Record.Id</elementReference>
                 </value>
             </inputParameters>
-            <label>Complete Completion Flow</label>
+            <label>Flow - Completion</label>
             <requiresAsyncProcessing>false</requiresAsyncProcessing>
         </stageSteps>
     </orchestratedStages>

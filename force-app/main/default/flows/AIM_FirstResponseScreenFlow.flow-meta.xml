@@ -5,7 +5,7 @@
         <name>Assign_Output_Variables</name>
         <label>Assign Output Variables</label>
         <locationX>402</locationX>
-        <locationY>2246</locationY>
+        <locationY>2126</locationY>
         <assignmentItems>
             <assignToReference>IncidentStatus</assignToReference>
             <operator>Assign</operator>
@@ -67,7 +67,7 @@
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Set_Closed</targetReference>
+            <targetReference>Update_Incident</targetReference>
         </connector>
     </assignments>
     <assignments>
@@ -80,13 +80,6 @@
             <operator>Assign</operator>
             <value>
                 <stringValue>Open</stringValue>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>completionText</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <stringValue>Incident will now entered categorization stage.</stringValue>
             </value>
         </assignmentItems>
         <connector>
@@ -110,7 +103,7 @@
         </value>
     </choices>
     <choices>
-        <name>Close</name>
+        <name>close</name>
         <choiceText>Close incident</choiceText>
         <dataType>String</dataType>
         <value>
@@ -119,7 +112,7 @@
     </choices>
     <choices>
         <name>proceed</name>
-        <choiceText>Proceed to incident categorization</choiceText>
+        <choiceText>Proceed to incident qualification</choiceText>
         <dataType>String</dataType>
         <value>
             <stringValue>proceed</stringValue>
@@ -220,7 +213,7 @@
                 <leftValueReference>Next_Step</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <elementReference>Close</elementReference>
+                    <elementReference>close</elementReference>
                 </rightValue>
             </conditions>
             <connector>
@@ -372,7 +365,7 @@
         <name>Update_Incident</name>
         <label>Update Incident</label>
         <locationX>446</locationX>
-        <locationY>2030</locationY>
+        <locationY>1910</locationY>
         <connector>
             <targetReference>Assign_Output_Variables</targetReference>
         </connector>
@@ -418,7 +411,7 @@
         <fields>
             <name>Next_Step</name>
             <choiceReferences>proceed</choiceReferences>
-            <choiceReferences>Close</choiceReferences>
+            <choiceReferences>close</choiceReferences>
             <dataType>String</dataType>
             <fieldText>Next Step</fieldText>
             <fieldType>RadioButtons</fieldType>
@@ -464,7 +457,7 @@
         <name>screenCompleted</name>
         <label>Completed</label>
         <locationX>402</locationX>
-        <locationY>2366</locationY>
+        <locationY>2246</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -510,35 +503,6 @@
         </connector>
     </start>
     <status>Active</status>
-    <subflows>
-        <name>Set_Closed</name>
-        <label>Set Closed</label>
-        <locationX>446</locationX>
-        <locationY>1910</locationY>
-        <connector>
-            <targetReference>Update_Incident</targetReference>
-        </connector>
-        <flowName>AIM_UpdateMilestone</flowName>
-        <inputAssignments>
-            <name>complete</name>
-            <value>
-                <booleanValue>true</booleanValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <name>IncidentId</name>
-            <value>
-                <elementReference>incidentId</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <name>milestoneName</name>
-            <value>
-                <stringValue>Incident first response</stringValue>
-            </value>
-        </inputAssignments>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </subflows>
     <variables>
         <name>assetCount</name>
         <dataType>Number</dataType>

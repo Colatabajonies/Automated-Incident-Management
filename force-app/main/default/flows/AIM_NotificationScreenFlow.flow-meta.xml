@@ -3,7 +3,7 @@
     <actionCalls>
         <name>Get_Contacts</name>
         <label>Get Contacts</label>
-        <locationX>182</locationX>
+        <locationX>534</locationX>
         <locationY>278</locationY>
         <actionName>AIM_GetIncidentRelatedContacts</actionName>
         <actionType>apex</actionType>
@@ -24,9 +24,43 @@
     </actionCalls>
     <apiVersion>55.0</apiVersion>
     <assignments>
+        <name>Assign_Email_Sent</name>
+        <label>Assign Email Sent</label>
+        <locationX>314</locationX>
+        <locationY>878</locationY>
+        <assignmentItems>
+            <assignToReference>EmailsSent</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>User_Selection</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Messaging_Sent</name>
+        <label>Assign Messaging Sent</label>
+        <locationX>578</locationX>
+        <locationY>878</locationY>
+        <assignmentItems>
+            <assignToReference>messagingSent</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>User_Selection</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <name>Assign_Vars</name>
         <label>Assign Vars</label>
-        <locationX>182</locationX>
+        <locationX>534</locationX>
         <locationY>398</locationY>
         <assignmentItems>
             <assignToReference>contactCount</assignToReference>
@@ -39,9 +73,34 @@
             <targetReference>Display_Impact_Summary</targetReference>
         </connector>
     </assignments>
+    <assignments>
+        <name>AssignBanner</name>
+        <label>AssignBanner</label>
+        <locationX>50</locationX>
+        <locationY>878</locationY>
+        <assignmentItems>
+            <assignToReference>BannerAdded</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>User_Selection</targetReference>
+        </connector>
+    </assignments>
+    <choices>
+        <name>bot</name>
+        <choiceText>Activate Incident Chatbot Deflection</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>bot</stringValue>
+        </value>
+    </choices>
     <choices>
         <name>community</name>
-        <choiceText>Place Incident Banner in Customer Community</choiceText>
+        <choiceText>Activate Banner in Digital Experience Site</choiceText>
         <dataType>String</dataType>
         <value>
             <stringValue>community</stringValue>
@@ -88,14 +147,36 @@
         </value>
     </choices>
     <decisions>
-        <name>Email_Channel_Notify</name>
-        <label>Email Channel Notify?</label>
-        <locationX>182</locationX>
+        <name>User_Selection</name>
+        <label>User Selection</label>
+        <locationX>534</locationX>
         <locationY>638</locationY>
         <defaultConnector>
-            <targetReference>Send_Slack_Notification</targetReference>
+            <targetReference>Notification_Complete</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Site_Banner</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>CustomerDeflection</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <elementReference>community</elementReference>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>BannerAdded</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Banner_to_Experience_Site</targetReference>
+            </connector>
+            <label>Site Banner</label>
+        </rules>
         <rules>
             <name>isEmailYes</name>
             <conditionLogic>and</conditionLogic>
@@ -106,23 +187,42 @@
                     <elementReference>Email</elementReference>
                 </rightValue>
             </conditions>
+            <conditions>
+                <leftValueReference>EmailsSent</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
                 <targetReference>Send_Core_Email</targetReference>
             </connector>
-            <label>Yes</label>
+            <label>Email</label>
         </rules>
-    </decisions>
-    <decisions>
-        <name>Send_Slack_Notification</name>
-        <label>Send Slack Notification?</label>
-        <locationX>182</locationX>
-        <locationY>974</locationY>
-        <defaultConnector>
-            <targetReference>Notification_Complete</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
-            <name>isSlackYes</name>
+            <name>isMessagingSelected</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Send_IncidentBroadcastCommunications</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <elementReference>Messaging</elementReference>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>messagingSent</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Messaging_Notifications</targetReference>
+            </connector>
+            <label>Messaging</label>
+        </rules>
+        <rules>
+            <name>isSlack</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>Send_IncidentBroadcastCommunications</leftValueReference>
@@ -131,7 +231,17 @@
                     <elementReference>Slack</elementReference>
                 </rightValue>
             </conditions>
-            <label>Yes</label>
+            <conditions>
+                <leftValueReference>slackSent</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Notification_Complete</targetReference>
+            </connector>
+            <label>Slack</label>
         </rules>
     </decisions>
     <environments>Default</environments>
@@ -160,7 +270,7 @@
     <recordLookups>
         <name>Get_Incident</name>
         <label>Get Incident</label>
-        <locationX>182</locationX>
+        <locationX>534</locationX>
         <locationY>158</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -181,13 +291,13 @@
     <screens>
         <name>Display_Impact_Summary</name>
         <label>Display Impact Summary</label>
-        <locationX>182</locationX>
+        <locationX>534</locationX>
         <locationY>518</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
         <connector>
-            <targetReference>Email_Channel_Notify</targetReference>
+            <targetReference>User_Selection</targetReference>
         </connector>
         <fields>
             <name>SummaryText</name>
@@ -195,8 +305,9 @@
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
-            <name>Deflection</name>
+            <name>CustomerDeflection</name>
             <choiceReferences>community</choiceReferences>
+            <choiceReferences>bot</choiceReferences>
             <dataType>String</dataType>
             <fieldText>Customer Deflection</fieldText>
             <fieldType>MultiSelectCheckboxes</fieldType>
@@ -218,14 +329,14 @@
     <screens>
         <name>Notification_Complete</name>
         <label>Notification Complete</label>
-        <locationX>314</locationX>
-        <locationY>1094</locationY>
+        <locationX>534</locationX>
+        <locationY>1154</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <fields>
             <name>SummaryText_0</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;color: rgb(29, 49, 89); font-size: 16px;&quot;&gt;Notification / Deflection Flow Complete&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;color: rgb(29, 49, 89);&quot;&gt;{!contactCount} &lt;/strong&gt;&lt;span style=&quot;color: rgb(29, 49, 89);&quot;&gt;customers notified about &quot;{!Get_Incident.Subject}&quot;&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;font-size: 16px; color: rgb(29, 49, 89);&quot;&gt;Notification / Deflection Flow Complete&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;Site Banner Added: &lt;strong&gt;{!BannerAdded}&lt;/strong&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;Customer Emails Sent: &lt;strong&gt;{!EmailsSent}&lt;/strong&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;Slack Notifications Sent: &lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
@@ -263,7 +374,7 @@
         <showHeader>true</showHeader>
     </screens>
     <start>
-        <locationX>56</locationX>
+        <locationX>408</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Get_Incident</targetReference>
@@ -271,12 +382,28 @@
     </start>
     <status>Active</status>
     <subflows>
-        <name>Send_Core_Email</name>
-        <label>Send Core Email</label>
+        <name>Add_Banner_to_Experience_Site</name>
+        <label>Add Banner to Experience Site</label>
         <locationX>50</locationX>
         <locationY>758</locationY>
         <connector>
-            <targetReference>Send_Slack_Notification</targetReference>
+            <targetReference>AssignBanner</targetReference>
+        </connector>
+        <flowName>broadcast_sites__AddBannerToSites</flowName>
+        <inputAssignments>
+            <name>recordId</name>
+            <value>
+                <elementReference>incidentId</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Send_Core_Email</name>
+        <label>Send Core Email</label>
+        <locationX>314</locationX>
+        <locationY>758</locationY>
+        <connector>
+            <targetReference>Assign_Email_Sent</targetReference>
         </connector>
         <flowName>AIM_SendCoreEmail</flowName>
         <inputAssignments>
@@ -299,6 +426,38 @@
         </inputAssignments>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </subflows>
+    <subflows>
+        <name>Send_Messaging_Notifications</name>
+        <label>Send Messaging Notifications</label>
+        <locationX>578</locationX>
+        <locationY>758</locationY>
+        <connector>
+            <targetReference>Assign_Messaging_Sent</targetReference>
+        </connector>
+        <flowName>AIM_SendMessagingNotifications</flowName>
+        <inputAssignments>
+            <name>incidentId</name>
+            <value>
+                <elementReference>incidentId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>objContacts</name>
+            <value>
+                <elementReference>objContacts</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <variables>
+        <name>BannerAdded</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
     <variables>
         <name>contactCount</name>
         <dataType>Number</dataType>
@@ -311,11 +470,31 @@
         </value>
     </variables>
     <variables>
+        <name>EmailsSent</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+    <variables>
         <name>incidentId</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>
         <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>messagingSent</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
     </variables>
     <variables>
         <name>objContacts</name>
@@ -324,5 +503,15 @@
         <isInput>false</isInput>
         <isOutput>false</isOutput>
         <objectType>Contact</objectType>
+    </variables>
+    <variables>
+        <name>slackSent</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
     </variables>
 </Flow>

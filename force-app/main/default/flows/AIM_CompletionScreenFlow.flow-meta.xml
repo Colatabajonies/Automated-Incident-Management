@@ -3,7 +3,7 @@
     <actionCalls>
         <name>Get_Contacts</name>
         <label>Get Contacts</label>
-        <locationX>182</locationX>
+        <locationX>754</locationX>
         <locationY>518</locationY>
         <actionName>AIM_GetIncidentRelatedContacts</actionName>
         <actionType>apex</actionType>
@@ -24,10 +24,26 @@
     </actionCalls>
     <apiVersion>55.0</apiVersion>
     <assignments>
+        <name>Add_BCId</name>
+        <label>Add BCId</label>
+        <locationX>842</locationX>
+        <locationY>1238</locationY>
+        <assignmentItems>
+            <assignToReference>BCIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Loop_BCs.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_BCs</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <name>Assign_Case_Vars</name>
         <label>Assign Case Vars</label>
-        <locationX>138</locationX>
-        <locationY>1790</locationY>
+        <locationX>490</locationX>
+        <locationY>1118</locationY>
         <assignmentItems>
             <assignToReference>currentCase.Id</assignToReference>
             <operator>Assign</operator>
@@ -54,9 +70,43 @@
         </connector>
     </assignments>
     <assignments>
+        <name>Assign_Emails_Sent</name>
+        <label>Assign Emails Sent</label>
+        <locationX>1018</locationX>
+        <locationY>1118</locationY>
+        <assignmentItems>
+            <assignToReference>emailsSent</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Checklist_Selection</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Knowledge_Var</name>
+        <label>Assign Knowledge Var</label>
+        <locationX>50</locationX>
+        <locationY>1238</locationY>
+        <assignmentItems>
+            <assignToReference>knowledgeCreated</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Checklist_Selection</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <name>Assign_Vars</name>
         <label>Assign Vars</label>
-        <locationX>182</locationX>
+        <locationX>754</locationX>
         <locationY>638</locationY>
         <assignmentItems>
             <assignToReference>contactCount</assignToReference>
@@ -79,21 +129,63 @@
                 <elementReference>Get_Attached_Assets</elementReference>
             </value>
         </assignmentItems>
+        <assignmentItems>
+            <assignToReference>NewKnowledge.Title</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Incident.Subject</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>NewKnowledge.Summary</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Incident.Description</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>NewKnowledge.UrlName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>knowledgeURL</elementReference>
+            </value>
+        </assignmentItems>
         <connector>
             <targetReference>Display_Impact_Summary</targetReference>
         </connector>
     </assignments>
     <assignments>
-        <name>Do_Something</name>
-        <label>Do Something</label>
-        <locationX>50</locationX>
-        <locationY>1334</locationY>
+        <name>AssignBannersRemoved</name>
+        <label>AssignBannersRemoved</label>
+        <locationX>754</locationX>
+        <locationY>1694</locationY>
         <assignmentItems>
-            <assignToReference>objContacts</assignToReference>
+            <assignToReference>BannersRemoved</assignToReference>
             <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
         </assignmentItems>
         <connector>
-            <targetReference>Close_Cases</targetReference>
+            <isGoTo>true</isGoTo>
+            <targetReference>Checklist_Selection</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>AssignCaseClosed</name>
+        <label>Assign Case Vars</label>
+        <locationX>402</locationX>
+        <locationY>1454</locationY>
+        <assignmentItems>
+            <assignToReference>casesClosed</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Checklist_Selection</targetReference>
         </connector>
     </assignments>
     <choices>
@@ -169,16 +261,38 @@
         </value>
     </choices>
     <decisions>
-        <name>Close_Cases</name>
-        <label>Close Cases?</label>
-        <locationX>182</locationX>
-        <locationY>1550</locationY>
+        <name>Checklist_Selection</name>
+        <label>Checklist Selection</label>
+        <locationX>754</locationX>
+        <locationY>878</locationY>
         <defaultConnector>
             <targetReference>Update_Incident</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
-            <name>isYesclosecases</name>
+            <name>isKnowledge</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Automation_Tasks</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <elementReference>knowledge</elementReference>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>knowledgeCreated</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Knowledge_Creation</targetReference>
+            </connector>
+            <label>Knowledge</label>
+        </rules>
+        <rules>
+            <name>isCloseCases</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>Automation_Tasks</leftValueReference>
@@ -188,29 +302,41 @@
                 </rightValue>
             </conditions>
             <conditions>
-                <leftValueReference>AttachedCaseCount</leftValueReference>
-                <operator>GreaterThan</operator>
+                <leftValueReference>casesClosed</leftValueReference>
+                <operator>EqualTo</operator>
                 <rightValue>
-                    <numberValue>0.0</numberValue>
+                    <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
                 <targetReference>Loop_Cases</targetReference>
             </connector>
-            <label>Yes</label>
+            <label>Close Cases</label>
         </rules>
-    </decisions>
-    <decisions>
-        <name>Email_Channel_Notify</name>
-        <label>Email Channel Notify?</label>
-        <locationX>182</locationX>
-        <locationY>878</locationY>
-        <defaultConnector>
-            <targetReference>Send_Slack_Notification</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
-            <name>isEmailYes</name>
+            <name>isRemoveBanner</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Automation_Tasks</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <elementReference>communitybanner</elementReference>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>BannersRemoved</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_BroadCast_Communications</targetReference>
+            </connector>
+            <label>Remove Banner</label>
+        </rules>
+        <rules>
+            <name>isEmail</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>Send_IncidentBroadcastCommunications</leftValueReference>
@@ -219,23 +345,20 @@
                     <elementReference>Email</elementReference>
                 </rightValue>
             </conditions>
+            <conditions>
+                <leftValueReference>emailsSent</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
                 <targetReference>Send_Core_Email</targetReference>
             </connector>
-            <label>Yes</label>
+            <label>Email</label>
         </rules>
-    </decisions>
-    <decisions>
-        <name>Send_Slack_Notification</name>
-        <label>Send Slack Notification?</label>
-        <locationX>182</locationX>
-        <locationY>1214</locationY>
-        <defaultConnector>
-            <targetReference>Close_Cases</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
-            <name>isSlackYes</name>
+            <name>isSlack</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>Send_IncidentBroadcastCommunications</leftValueReference>
@@ -245,20 +368,41 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Do_Something</targetReference>
+                <targetReference>Update_Incident</targetReference>
             </connector>
-            <label>Yes</label>
+            <label>Slack</label>
         </rules>
     </decisions>
     <environments>Default</environments>
+    <formulas>
+        <name>knowledgeURL</name>
+        <dataType>String</dataType>
+        <expression>HTMLENCODE(
+SUBSTITUTE({!Get_Incident.Subject},&apos; &apos;, &apos;&apos;)
+)</expression>
+    </formulas>
     <interviewLabel>AIM - Completion Screen Flow {!$Flow.CurrentDateTime}</interviewLabel>
     <isTemplate>true</isTemplate>
     <label>AIM - Completion Screen Flow</label>
     <loops>
+        <name>Loop_BCs</name>
+        <label>Loop BCs</label>
+        <locationX>754</locationX>
+        <locationY>1118</locationY>
+        <collectionReference>Get_BroadCast_Communications</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_BCId</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Active_Audiences</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
         <name>Loop_Cases</name>
         <label>Loop Cases</label>
-        <locationX>50</locationX>
-        <locationY>1670</locationY>
+        <locationX>402</locationX>
+        <locationY>998</locationY>
         <collectionReference>Get_Attached_Cases</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -287,10 +431,55 @@
         </value>
     </processMetadataValues>
     <processType>Flow</processType>
+    <recordCreates>
+        <name>Create_Knowledge</name>
+        <label>Create Knowledge</label>
+        <locationX>50</locationX>
+        <locationY>1118</locationY>
+        <connector>
+            <targetReference>Assign_Knowledge_Var</targetReference>
+        </connector>
+        <inputReference>NewKnowledge</inputReference>
+    </recordCreates>
+    <recordLookups>
+        <name>Get_Active_Audiences</name>
+        <label>Get Active Audiences</label>
+        <locationX>754</locationX>
+        <locationY>1454</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Remove_Site_Banners</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Active</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>BroadcastType</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>ExperienceSiteBanner</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>BroadcastCommunicationId__NotFound</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>BCIds</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>BroadcastCommAudience</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
     <recordLookups>
         <name>Get_Attached_Assets</name>
         <label>Get Attached Assets</label>
-        <locationX>182</locationX>
+        <locationX>754</locationX>
         <locationY>398</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -311,7 +500,7 @@
     <recordLookups>
         <name>Get_Attached_Cases</name>
         <label>Get Attached Cases</label>
-        <locationX>182</locationX>
+        <locationX>754</locationX>
         <locationY>278</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -330,9 +519,30 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
+        <name>Get_BroadCast_Communications</name>
+        <label>Get BroadCast Communications</label>
+        <locationX>754</locationX>
+        <locationY>998</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_BCs</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>RelatedRecordId__NotFound</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>incidentId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>BroadcastCommunication</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
         <name>Get_Incident</name>
         <label>Get Incident</label>
-        <locationX>182</locationX>
+        <locationX>754</locationX>
         <locationY>158</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -353,18 +563,18 @@
     <recordUpdates>
         <name>Update_Cases</name>
         <label>Update Cases</label>
-        <locationX>50</locationX>
-        <locationY>2006</locationY>
+        <locationX>402</locationX>
+        <locationY>1334</locationY>
         <connector>
-            <targetReference>Update_Incident</targetReference>
+            <targetReference>AssignCaseClosed</targetReference>
         </connector>
         <inputReference>casesToUpdate</inputReference>
     </recordUpdates>
     <recordUpdates>
         <name>Update_Incident</name>
         <label>Update Incident</label>
-        <locationX>182</locationX>
-        <locationY>2222</locationY>
+        <locationX>754</locationX>
+        <locationY>1970</locationY>
         <connector>
             <targetReference>Incident_Complete</targetReference>
         </connector>
@@ -387,13 +597,13 @@
     <screens>
         <name>Display_Impact_Summary</name>
         <label>Display Impact Summary</label>
-        <locationX>182</locationX>
+        <locationX>754</locationX>
         <locationY>758</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
         <connector>
-            <targetReference>Email_Channel_Notify</targetReference>
+            <targetReference>Checklist_Selection</targetReference>
         </connector>
         <fields>
             <name>SummaryText</name>
@@ -426,14 +636,14 @@
     <screens>
         <name>Incident_Complete</name>
         <label>Incident Complete</label>
-        <locationX>182</locationX>
-        <locationY>2342</locationY>
+        <locationX>754</locationX>
+        <locationY>2090</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <fields>
             <name>SummaryText_0</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;font-size: 18px; color: rgb(29, 49, 89);&quot;&gt;Flow Complete&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;color: rgb(29, 49, 89);&quot;&gt;Incident record and {!AttachedCaseCount} cases updated to closed status.&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;color: rgb(29, 49, 89); font-size: 18px;&quot;&gt;Completion Flow Complete&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;color: rgb(29, 49, 89);&quot;&gt;Incident record updated to completed status.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
@@ -470,8 +680,62 @@
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
+    <screens>
+        <name>Knowledge_Creation</name>
+        <label>Knowledge Creation</label>
+        <locationX>50</locationX>
+        <locationY>998</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Create_Knowledge</targetReference>
+        </connector>
+        <fields>
+            <fieldType>ObjectProvided</fieldType>
+            <isRequired>false</isRequired>
+            <objectFieldReference>NewKnowledge.Title</objectFieldReference>
+        </fields>
+        <fields>
+            <fieldType>ObjectProvided</fieldType>
+            <isRequired>false</isRequired>
+            <objectFieldReference>NewKnowledge.Summary</objectFieldReference>
+        </fields>
+        <fields>
+            <fieldType>ObjectProvided</fieldType>
+            <isRequired>false</isRequired>
+            <objectFieldReference>NewKnowledge.Chat_Answer__c</objectFieldReference>
+        </fields>
+        <fields>
+            <fieldType>ObjectProvided</fieldType>
+            <isRequired>false</isRequired>
+            <objectFieldReference>NewKnowledge.FAQ_External_ID__c</objectFieldReference>
+        </fields>
+        <fields>
+            <fieldType>ObjectProvided</fieldType>
+            <isRequired>false</isRequired>
+            <objectFieldReference>NewKnowledge.UrlName</objectFieldReference>
+        </fields>
+        <fields>
+            <fieldType>ObjectProvided</fieldType>
+            <isRequired>false</isRequired>
+            <objectFieldReference>NewKnowledge.Featured_in_Communities__c</objectFieldReference>
+        </fields>
+        <fields>
+            <fieldType>ObjectProvided</fieldType>
+            <isRequired>false</isRequired>
+            <objectFieldReference>NewKnowledge.IsVisibleInCsp</objectFieldReference>
+        </fields>
+        <fields>
+            <fieldType>ObjectProvided</fieldType>
+            <isRequired>false</isRequired>
+            <objectFieldReference>NewKnowledge.IsVisibleInPkb</objectFieldReference>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
     <start>
-        <locationX>56</locationX>
+        <locationX>628</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Get_Incident</targetReference>
@@ -479,12 +743,28 @@
     </start>
     <status>Active</status>
     <subflows>
+        <name>Remove_Site_Banners</name>
+        <label>Remove Site Banners</label>
+        <locationX>754</locationX>
+        <locationY>1574</locationY>
+        <connector>
+            <targetReference>AssignBannersRemoved</targetReference>
+        </connector>
+        <flowName>broadcast_sites__StopAllSiteBanners</flowName>
+        <inputAssignments>
+            <name>recordId</name>
+            <value>
+                <elementReference>Get_Active_Audiences.BroadcastCommunicationId__NotFound</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
         <name>Send_Core_Email</name>
         <label>Send Core Email</label>
-        <locationX>50</locationX>
+        <locationX>1018</locationX>
         <locationY>998</locationY>
         <connector>
-            <targetReference>Send_Slack_Notification</targetReference>
+            <targetReference>Assign_Emails_Sent</targetReference>
         </connector>
         <flowName>AIM_SendCoreEmail</flowName>
         <inputAssignments>
@@ -530,6 +810,33 @@
         </value>
     </variables>
     <variables>
+        <name>BannersRemoved</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+    <variables>
+        <name>BCIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>casesClosed</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+    <variables>
         <name>casesToUpdate</name>
         <dataType>SObject</dataType>
         <isCollection>true</isCollection>
@@ -557,11 +864,39 @@
         <objectType>Case</objectType>
     </variables>
     <variables>
+        <name>emailsSent</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+    <variables>
         <name>incidentId</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>
         <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>knowledgeCreated</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+    <variables>
+        <name>NewKnowledge</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Knowledge__kav</objectType>
     </variables>
     <variables>
         <name>objContacts</name>
