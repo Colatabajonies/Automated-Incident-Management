@@ -25,7 +25,7 @@
 
         <members>AIMBot_GetBannerText</members>
         <members>AIMBot_GetContact</members>
-        <members>AIM_Bot_CreateCase</members>
+        <members>AIMBot_CreateCase</members>
     </types>
     <types>
         <members>AIM_CreateFlowSchedule</members>
