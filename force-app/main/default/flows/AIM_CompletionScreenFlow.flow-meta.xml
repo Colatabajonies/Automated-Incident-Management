@@ -699,22 +699,7 @@ SUBSTITUTE({!Get_Incident.Subject},&apos; &apos;, &apos;&apos;)
         <fields>
             <fieldType>ObjectProvided</fieldType>
             <isRequired>false</isRequired>
-            <objectFieldReference>NewKnowledge.Chat_Answer__c</objectFieldReference>
-        </fields>
-        <fields>
-            <fieldType>ObjectProvided</fieldType>
-            <isRequired>false</isRequired>
-            <objectFieldReference>NewKnowledge.FAQ_External_ID__c</objectFieldReference>
-        </fields>
-        <fields>
-            <fieldType>ObjectProvided</fieldType>
-            <isRequired>false</isRequired>
             <objectFieldReference>NewKnowledge.UrlName</objectFieldReference>
-        </fields>
-        <fields>
-            <fieldType>ObjectProvided</fieldType>
-            <isRequired>false</isRequired>
-            <objectFieldReference>NewKnowledge.Featured_in_Communities__c</objectFieldReference>
         </fields>
         <fields>
             <fieldType>ObjectProvided</fieldType>
@@ -736,7 +721,7 @@ SUBSTITUTE({!Get_Incident.Subject},&apos; &apos;, &apos;&apos;)
             <targetReference>Get_Incident</targetReference>
         </connector>
     </start>
-    <status>Active</status>
+    <status>Draft</status>
     <subflows>
         <name>Remove_Site_Banners</name>
         <label>Remove Site Banners</label>

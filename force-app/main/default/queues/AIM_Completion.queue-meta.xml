@@ -2,11 +2,6 @@
 <Queue xmlns="http://soap.sforce.com/2006/04/metadata">
     <doesSendEmailToMembers>false</doesSendEmailToMembers>
     <name>AIM Completion</name>
-    <queueMembers>
-        <users>
-            <user>cgilmore@cdo240.demo</user>
-        </users>
-    </queueMembers>
     <queueSobject>
         <sobjectType>Incident</sobjectType>
     </queueSobject>
