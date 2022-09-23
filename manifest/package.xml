@@ -68,6 +68,10 @@
         <name>Bot</name>
     </types>
 
+    <types>
+        <members>Incident.Status</members>
+        <name>CustomField</name>
+    </types>
 <!--    <types>
         <members>aim_Datatable</members>
         <members>aim_TilePicker</members>

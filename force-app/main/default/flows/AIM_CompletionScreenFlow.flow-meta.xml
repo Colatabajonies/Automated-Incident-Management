@@ -379,7 +379,7 @@
         <dataType>String</dataType>
         <expression>HTMLENCODE(
 SUBSTITUTE({!Get_Incident.Subject},&apos; &apos;, &apos;&apos;)
-)</expression>
+) &amp; &apos;-&apos; &amp; {!Get_Incident.IncidentNumber}</expression>
     </formulas>
     <interviewLabel>AIM - Completion Screen Flow {!$Flow.CurrentDateTime}</interviewLabel>
     <isTemplate>true</isTemplate>
@@ -607,7 +607,7 @@ SUBSTITUTE({!Get_Incident.Subject},&apos; &apos;, &apos;&apos;)
         </connector>
         <fields>
             <name>SummaryText</name>
-            <fieldText>&lt;p&gt;&lt;span style=&quot;color: rgb(29, 49, 89); font-size: 16px;&quot;&gt;{!Get_Incident.Subject}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(29, 49, 89); background-color: rgb(255, 255, 255);&quot;&gt;{!contactCount} &lt;/strong&gt;&lt;span style=&quot;color: rgb(29, 49, 89); background-color: rgb(255, 255, 255);&quot;&gt;impacted cases&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(29, 49, 89); background-color: rgb(255, 255, 255);&quot;&gt;{!contactCount} &lt;/strong&gt;&lt;span style=&quot;color: rgb(29, 49, 89); background-color: rgb(255, 255, 255);&quot;&gt;impacted assets&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(29, 49, 89);&quot;&gt;{!contactCount} &lt;/strong&gt;&lt;span style=&quot;color: rgb(29, 49, 89);&quot;&gt;impacted contacts&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 18px;&quot;&gt;Completion checklist&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px; color: rgb(0, 0, 0);&quot;&gt;{!Get_Incident.Subject}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);&quot;&gt;{!contactCount} &lt;/strong&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);&quot;&gt;impacted cases&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);&quot;&gt;{!contactCount} &lt;/strong&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);&quot;&gt;impacted assets&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(0, 0, 0);&quot;&gt;{!contactCount} &lt;/strong&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;impacted contacts&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 18px;&quot;&gt;Completion checklist&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
@@ -642,11 +642,6 @@ SUBSTITUTE({!Get_Incident.Subject},&apos; &apos;, &apos;&apos;)
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <fields>
-            <name>SummaryText_0</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;color: rgb(29, 49, 89); font-size: 18px;&quot;&gt;Completion Flow Complete&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;color: rgb(29, 49, 89);&quot;&gt;Incident record updated to completed status.&lt;/span&gt;&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-        </fields>
-        <fields>
             <name>bluecheck</name>
             <extensionName>flowruntime:image</extensionName>
             <fieldType>ComponentInstance</fieldType>
@@ -673,8 +668,8 @@ SUBSTITUTE({!Get_Incident.Subject},&apos; &apos;, &apos;&apos;)
             <storeOutputAutomatically>true</storeOutputAutomatically>
         </fields>
         <fields>
-            <name>clickfinishdisp</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;(click finish to submit)&lt;/p&gt;</fieldText>
+            <name>SummaryText_0</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;font-size: 18px; color: rgb(0, 0, 0);&quot;&gt;Completion Flow Complete&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;Incident record updated to completed status.&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;(click finish to submit)&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
