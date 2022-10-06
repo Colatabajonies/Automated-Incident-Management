@@ -419,7 +419,7 @@ Status: {!Case.Status}</message>
         <botSteps>
             <botVariableOperation>
                 <botInvocation>
-                    <invocationActionName>AIM_Bot_CreateCase</invocationActionName>
+                    <invocationActionName>AIMBot_CreateCase</invocationActionName>
                     <invocationActionType>flow</invocationActionType>
                     <invocationMappings>
                         <parameterName>Description</parameterName>
