@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bot xmlns="http://soap.sforce.com/2006/04/metadata">
+    <botMlDomain>
+        <label>AIMBot - Incident Management</label>
+        <mlIntents>
+            <developerName>Main_Menu</developerName>
+            <label>Main Menu</label>
+            <mlIntentUtterances>
+                <language>en_US</language>
+                <utterance>Main Menu</utterance>
+            </mlIntentUtterances>
+            <mlIntentUtterances>
+                <language>en_US</language>
+                <utterance>Restart</utterance>
+            </mlIntentUtterances>
+            <mlIntentUtterances>
+                <language>en_US</language>
+                <utterance>Menu</utterance>
+            </mlIntentUtterances>
+            <mlIntentUtterances>
+                <language>en_US</language>
+                <utterance>Start Over</utterance>
+            </mlIntentUtterances>
+            <mlIntentUtterances>
+                <language>en_US</language>
+                <utterance>Go Back</utterance>
+            </mlIntentUtterances>
+        </mlIntents>
+        <name>AIMBot_Incident_Management</name>
+    </botMlDomain>
+    <contextVariables>
+        <dataType>Text</dataType>
+        <developerName>ChatKey</developerName>
+        <label>Chat Key</label>
+    </contextVariables>
+    <contextVariables>
+        <dataType>Id</dataType>
+        <developerName>ContactId</developerName>
+        <label>Contact Id</label>
+    </contextVariables>
+    <contextVariables>
+        <dataType>Id</dataType>
+        <developerName>EndUserId</developerName>
+        <label>End User Id</label>
+    </contextVariables>
+    <contextVariables>
+        <dataType>Id</dataType>
+        <developerName>RoutableId</developerName>
+        <label>Routable Id</label>
+    </contextVariables>
+    <label>AIM Bot - Incident Management</label>
+    <logPrivateConversationData>false</logPrivateConversationData>
+    <richContentEnabled>true</richContentEnabled>
+</Bot>

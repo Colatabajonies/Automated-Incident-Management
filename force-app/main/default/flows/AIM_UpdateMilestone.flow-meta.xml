@@ -4,10 +4,10 @@
     <assignments>
         <name>Assign_Output</name>
         <label>Assign Output</label>
-        <locationX>176</locationX>
+        <locationX>270</locationX>
         <locationY>854</locationY>
         <assignmentItems>
-            <assignToReference>isOrchestrationConditionMet</assignToReference>
+            <assignToReference>complete</assignToReference>
             <operator>Assign</operator>
             <value>
                 <elementReference>Milestone.IsCompleted</elementReference>
@@ -15,9 +15,22 @@
         </assignmentItems>
     </assignments>
     <assignments>
+        <name>Assign_Output_to_False</name>
+        <label>Assign Output to False</label>
+        <locationX>490</locationX>
+        <locationY>398</locationY>
+        <assignmentItems>
+            <assignToReference>complete</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
         <name>AssignMark_Complete</name>
         <label>Mark Complete</label>
-        <locationX>132</locationX>
+        <locationX>50</locationX>
         <locationY>398</locationY>
         <assignmentItems>
             <assignToReference>Milestone.CompletionDate</assignToReference>
@@ -33,36 +46,17 @@
     <decisions>
         <name>isMilestone_Complete</name>
         <label>Milestone Complete?</label>
-        <locationX>176</locationX>
+        <locationX>270</locationX>
         <locationY>278</locationY>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <defaultConnector>
+            <targetReference>Assign_Output_to_False</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Nothing Found</defaultConnectorLabel>
         <rules>
-            <name>Milestone_Complete</name>
+            <name>Mark_Milestone_Complete</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>Get_Milestone</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>Milestone.IsCompleted</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Assign_Output</targetReference>
-            </connector>
-            <label>Milestone Complete</label>
-        </rules>
-        <rules>
-            <name>Milestone_Incomplete</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Get_Milestone</leftValueReference>
+                <leftValueReference>Milestone</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
@@ -85,7 +79,22 @@
             <connector>
                 <targetReference>AssignMark_Complete</targetReference>
             </connector>
-            <label>Milestone Incomplete</label>
+            <label>Mark Milestone Complete</label>
+        </rules>
+        <rules>
+            <name>No_Update</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Milestone</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_Output</targetReference>
+            </connector>
+            <label>No Update</label>
         </rules>
     </decisions>
     <description>Specify an incident&apos;s milestone name to either update to completed, or check the status of</description>
@@ -115,7 +124,7 @@
     <recordLookups>
         <name>Get_Milestone</name>
         <label>Get Milestone</label>
-        <locationX>176</locationX>
+        <locationX>270</locationX>
         <locationY>158</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -147,7 +156,7 @@
     <recordLookups>
         <name>Refresh_Milestone</name>
         <label>Refresh Milestone</label>
-        <locationX>132</locationX>
+        <locationX>50</locationX>
         <locationY>638</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -179,7 +188,7 @@
     <recordUpdates>
         <name>Update_Milestone</name>
         <label>Update Milestone</label>
-        <locationX>132</locationX>
+        <locationX>50</locationX>
         <locationY>518</locationY>
         <connector>
             <targetReference>Refresh_Milestone</targetReference>
@@ -187,7 +196,7 @@
         <inputReference>Milestone</inputReference>
     </recordUpdates>
     <start>
-        <locationX>50</locationX>
+        <locationX>144</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Get_Milestone</targetReference>
@@ -199,7 +208,7 @@
         <dataType>Boolean</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>
-        <isOutput>false</isOutput>
+        <isOutput>true</isOutput>
         <value>
             <booleanValue>false</booleanValue>
         </value>
@@ -210,16 +219,6 @@
         <isCollection>false</isCollection>
         <isInput>true</isInput>
         <isOutput>false</isOutput>
-    </variables>
-    <variables>
-        <name>isOrchestrationConditionMet</name>
-        <dataType>Boolean</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>true</isOutput>
-        <value>
-            <booleanValue>false</booleanValue>
-        </value>
     </variables>
     <variables>
         <name>Milestone</name>

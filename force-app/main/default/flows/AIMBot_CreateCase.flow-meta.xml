@@ -46,6 +46,11 @@
         </rules>
     </decisions>
     <environments>Default</environments>
+    <formulas>
+        <name>FullName</name>
+        <dataType>String</dataType>
+        <expression>{!FirstName} &amp; &apos; &apos; &amp; {!LastName}</expression>
+    </formulas>
     <interviewLabel>AIM Bot - Create Case {!$Flow.CurrentDateTime}</interviewLabel>
     <label>AIM Bot - Create Case</label>
     <processMetadataValues>
@@ -117,6 +122,24 @@
             <field>Subject</field>
             <value>
                 <elementReference>Subject</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>SuppliedEmail</field>
+            <value>
+                <elementReference>Email</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>SuppliedName</field>
+            <value>
+                <elementReference>FullName</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>SuppliedPhone</field>
+            <value>
+                <elementReference>Phone</elementReference>
             </value>
         </inputAssignments>
         <object>Case</object>
@@ -195,7 +218,28 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
+        <name>Email</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>FirstName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
         <name>incidentId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>LastName</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>
@@ -216,6 +260,13 @@
         <isInput>true</isInput>
         <isOutput>false</isOutput>
         <objectType>Contact</objectType>
+    </variables>
+    <variables>
+        <name>Phone</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
     </variables>
     <variables>
         <name>Subject</name>

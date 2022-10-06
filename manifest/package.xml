@@ -3,7 +3,7 @@
     <types>
         <name>Flow</name>
         
-        <members>AIM_IncidentOrchestration</members>
+        <!--<members>AIM_IncidentOrchestration</members>
 
         <members>AIM_IncidentDetection</members>
 
@@ -21,49 +21,14 @@
         <members>AIM_CompletionScreenFlow</members>
         
         <members>AIM_SendCoreEmail</members>
-        <members>AIM_SendMessagingNotifications</members>
+        <members>AIM_SendMessagingNotifications</members> -->
 
-        <members>AIMBot_GetBannerText</members>
-        <members>AIMBot_GetContact</members>
-        <members>AIMBot_CreateCase</members>
+        <members>AIMBot_Get_User_Context</members>
+        <members>AIM_Bot_CreateCase</members>
     </types>
+   
     <types>
-        <members>AIM_CreateFlowSchedule</members>
-        <members>AIM_ScheduledFlowRun</members>
-        <members>AIM_EmailTemplateEditorController</members>
-        <members>AIM_SendEmails</members>
-        <members>AIM_GetIncidentRelatedContacts</members>
-        <name>ApexClass</name>
-    </types>
-    <types>
-        <members>AIM_EmailTemplateEditor</members>
-        <name>AuraDefinitionBundle</name>
-    </types>
-    <types>
-        <members>aim_check</members>
-        <name>StaticResource</name>
-    </types>
-   <types>
-        <name>EntitlementProcess</name>
-        <members>AIM - Entitlement Process</members>
-    </types>
-    <types>
-        <name>MilestoneType</name>
-        <members>Incident first response</members>
-        <members>Incident qualification</members>
-        <members>Incident notification and deflection</members>
-        <members>Incident investigation started</members>
-        <members>Incident closed</members>
-    </types>
-    <types>
-        <members>AIM_FirstResponse</members>
-        <members>AIM_Qualification</members>
-        <members>AIM_Notification</members>
-        <members>AIM_Completion</members>
-        <name>Queue</name>
-    </types>
-    <types>
-        <members>AudreyBot_IncidentManagement</members>
+        <members>AIMBot_Incident_Management</members>
         <name>Bot</name>
     </types>
     <version>55.0</version>

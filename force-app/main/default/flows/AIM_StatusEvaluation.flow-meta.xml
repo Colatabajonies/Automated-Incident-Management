@@ -29,13 +29,13 @@
     </assignments>
     <decisions>
         <name>Return_Value</name>
-        <label>Return Value</label>
+        <label>Return Value?</label>
         <locationX>182</locationX>
         <locationY>278</locationY>
         <defaultConnector>
             <targetReference>Assign_False</targetReference>
         </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <defaultConnectorLabel>False</defaultConnectorLabel>
         <rules>
             <name>isTrue</name>
             <conditionLogic>(1 AND 2) OR (3 AND 4)</conditionLogic>
